@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "df <- read.csv(file=\"datacollege.csv\",head=TRUE,sep=\";\",stringsAsFactors= TRUE,row.names = NULL)\ndf$Highest.ACT = NULL\ndf$GPA <- as.numeric(df$GPA)\ndf$Highest.Combined.SAT.2400 <- as.numeric(df$Highest.Combined.SAT.2400)\nmean  <- aggregate(df[, 1:2], list(df$App.Result), mean)\nmean\nprint(\"This is the means for each group\")\nstand <- aggregate(df[, 1:2], list(df$App.Result), sd)\nstand\n\n\n\nattributes <- c(\"Accepted\", \"Denied\",\"Waitlisted\" )\ncalculate <- function(GPA,SAT)\n{\n  #create a empty data fram \n  \n  nCol <- ncol(df)\n  print(nCol)\n  #finds the number of categories ie Accpeted ,Denied,etc\n  size <- length(levels(factor(df$App.Result)))\n  print(size)\n  probs <- rep(0,size)\n  for(type in 1:size){\n    for(feature in 2:nCol){\n      print(type)\n      print(feature)\n      myProb <- 1\n      myProb = 1* pnorm(GPA,mean[type,feature,],sd[type,feature,])\n      #prob[type] = myProb\n      \n      \n    }\n    \n    \n  }\n  \n}\n#fnd macx probaility \n\ncalculate(2.5,500)\n\n",
+    "created" : 1469763936477.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3637625579",
+    "id" : "8DC9CCC3",
+    "lastKnownWriteTime" : 1469581021,
+    "last_content_update" : 1469581021,
+    "path" : "~/BayesianTest/JulyRTest.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
