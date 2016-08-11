@@ -6,55 +6,43 @@ library("fields")
 library("ggplot2")
 library("lattice")
 
-#data cleaning
-#get it in the proper form for the rest of the model
-
-#only retrieve displastic rows
-
-#mset <- mset[grep("yes",mset$high_grade),]
-
-#only retrieve non-displastic rows
-#mset <- mset[which(is.na(mset$high_grade)),]
 
 
+#code only retrieves High Grade rows
+#mset <- mset[grep("HGD",mset$indication),]
+
+#only retrieve non-highgrade rows
+#mset <- mset[-c(grep("HGD", mset$indication)),]
 
 #only retrieve rows with tissue age
 mset <- mset[c(grep("[0-9]",mset$tissue_age)),]
 
 #removes samples that are normal from data frame or any other bad string
 #mset <- mset[-c(grep("normal",mset$Sample.Clinical.Pathology)),]
-
-
-clean <- mset$Tissue_location
-
+better_dat <- mset$Tissue_location
 #better dat contains all the values with length or centimeter data
-better_dat <- mset[grep("cm", clean),]
+better_dat <- mset[grep("cm", better_dat),]
 clocker <- lapply(better_dat$Tissue_location,FUN = function(x) gsub(".+cm","",x))
 
 
-#age
-junction <- better_dat[19]
+#caculate distance fromGEJ junction
+GEJ <- better_dat[19]
 GEJ <- c(as.numeric(unlist(junction)))
 
 #distone and disttwo are both 
-distone <- lapply(better_dat$Tissue_location, FUN = function(x) gsub("cm.+","",x))
-disttwo <- c(as.numeric(lapply(distone, FUN = function(x) gsub("[^0-9]","",x))))
-#I'm making it absolute value for now the values should not be negative
-dif <- GEJ - disttwo
+dist <- lapply(better_dat$Tissue_location, FUN = function(x) gsub("cm.+","",x))
+dist <- c(as.numeric(lapply(dist, FUN = function(x) gsub("[^0-9]","",x))))
+dif <- GEJ - dist
 
 
 clock <- c(unlist(clocker))
 #replace 5:00 with 6:00 and organizes data into data frame
-
-
 clock <- gsub("5:00", "6:00",clock)
 dist <- c(dif)
-#age is age of tissue
-#age <- c(floor(rexp(length(dif))*50))
-#age <- c(seq(1:length(dif)))
 onset <- mset$tissue_age
 age <- mset$Age
 dwell <- age -onset
+
 
 df <- data.frame(clock,dist,dwell)
 names(df) <- c("clock","dist","age")
@@ -109,41 +97,26 @@ plot_ly(z=best_matrix,x= c("3:00","6:00","9:00","12:00"), type="heatmap")
 
 heatmap(na.omit(best_matrix))
 
-#secondary plot to make smooth grap of data
+#Part 2 -- smooth graph of data
 #retireves the coordinates and z values of the parts of the matrix without NAs
 
-#making copies for boundary
-
+#making copies of position to make peridoic boundary conditions
 pos = which(!is.na(best_matrix),TRUE)
-
 left  <-  pos
 left[,2] = left[,2]-4 
-
 right <-  pos
 right[,2] = right[,2] +4
-
-#remove above
 PBCpos = rbind(pos,right,left)
-PBCpos_2 = PBCpos[,c(2,1)]
+PBCpos = PBCpos[,c(2,1)]
 
 
-#last ditch
-#x <- pos[,1]
-#y <- pos[,2]
-#pos_new = cbind(y,x)
 
 pre_val = as.vector(best_matrix)
 z_index = which(!is.na(pre_val), TRUE)
-
 z_val <- pre_val[z_index]
-
 rorm_mat = matrix(z_val,ncol = 1)
-
 PBCz = rbind(rorm_mat,rorm_mat,rorm_mat)
-#test matrix
-
-best_fit <- Tps(PBCpos_2,PBCz,cost= 1.4)
-
+best_fit <- Tps(PBCpos,PBCz,cost= 1.4)
 grid.list<- list( x= seq(0,4,.1), y=seq(0,12,.1))   #Note - these ranges will need to be changed for your needs
 xg<- make.surface.grid(grid.list)
 
@@ -152,29 +125,24 @@ dev.off()
 dev.new()
 f1<- predict( best_fit, xg)
 out.p<- as.surface( xg, f1)
-best_plot = plot.surface(out.p,zlim=c(14,35),xlab='clock position',ylab='length in (cm) from GEJ',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = .75, xaxt = 'n',col = myPal)
-best_plot
+best_plot = plot.surface(out.p,zlim=c(14,40),xlab='clock position',ylab='length in (cm) from GEJ',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = .75, xaxt = 'n',col = myPal)
 axis(side=1,at = c(1,2,3,4),labels = c("3:00","6:00","9:00","12:00"))
 #the code below deals with plotting points on the graph
 
-#high_clock contains high grade biopsy where 
+#high_clock_index is index of high grade biopsies with clock values
 p_clock <-  mset[grep(":",mset$Tissue_location),]
-high_clock_index <- grep("yes",p_clock$high_grade)
+high_clock_index <- grep("HGD",p_clock$indication)
 # index of nondisplastic tissue with clock
-nondist_index <- setdiff(seq(1:length(high_clock_index)), high_clock_index)      #which(is.na(p_clock$high_grade))
-
-#highclock_tissue <- p_clock[high_clock]$tissue_age
-
-
+nondist_index <- setdiff(seq(1:length(high_clock_index)), high_clock_index)      
 
 #plot points that don't have clocks and are nondisplastic
 #no_clock <- mset_2[grep("[^:]*", mset_2$Tissue_location),]
 clock_index <- grep(":",  mset$Tissue_location)
 #no_clock <- mset_2[setdiff(seq(1:length(mset_2$Tissue_location)),clock_index),]
 no_clock <- mset[-c(clock_index),]
-low_clock_index = which(is.na(no_clock$high_grade))
-#lowclock_index <- grep("[^y]",no_clock$high_grade) 
-high_no_index <- grep("y",no_clock$high_grade)
+
+low_clock_index = grep("[^HGD]", no_clock$indication)
+high_no_index <- grep("HGD",no_clock$indication)
 high_no_clock <- y_coord_no[high_no_index]
 low_no_clock <- y_coord_no[low_clock_index]
 
@@ -214,6 +182,7 @@ points(x_coord[high_clock_index], y_coord[high_clock_index],pch=1,cex = 2,lwd = 
 #typeof(x["498"])
 #x["498"][[1]]$Sample_Name
 
-# heatmap of data without high grade
 
-
+#try <- lapply(better_dat$Tissue_location, FUN = function(x) gsub("\\d\\d(?=cm)","",x,invert=TRUE))
+#m <- regexpr("[0-9][0-9](?=cm)","20cm dog are good",perl=T)
+#frog <- regmatches("20cm dog are good",m)
