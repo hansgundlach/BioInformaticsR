@@ -140,7 +140,6 @@ points(x_coord,y_coord-1, pch = "X")
 #p_lock contains  all the displastic tissue with clock values
 p_clock <-  circles[grep(":",circles$clock),]
 #color is based on displastic tissue age
-
 color_val <- myPal(200)[findInterval( p_clock$age, seq( 15,35, length.out= 200), rightmost.closed= T ) ]
 
 #convert the pclock clock values to numerals
