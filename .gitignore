@@ -9,8 +9,6 @@ Desktop.ini
 $RECYCLE.BIN/
 
 
-*.pdf  
-*.PDF	
 
 # Windows Installer files
 *.cab
@@ -20,6 +18,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.pdf  
+*.PDF	
+
 
 # =========================
 # Operating System Files

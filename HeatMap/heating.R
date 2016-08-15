@@ -89,10 +89,9 @@ for(index in 1:length(y_coord_no)){
 #computes weighted averages by dividing the sum of ages by the sum of weights in the weight matrix 
 best_matrix <- esoph*weight^-1
 best_matrix
-#makes 2D heatplot 
+#makes 2D discrete heatmap
 plot_ly(z=best_matrix,x= c("3:00","6:00","9:00","12:00"), type="heatmap")
 
-heatmap(na.omit(best_matrix))
 
 #Part 2 -- smooth graph of data
 #retireves the coordinates and z values of the parts of the matrix without NAs
@@ -138,12 +137,13 @@ points(runif(length(y_coord_no),0,4),y_coord_no-1, pch = "X", col = "white")
 #plot the nondisplastic points with clock values
 points(x_coord,y_coord-1, pch = "X")
 
+#p_lock contains  all the displastic tissue with clock values
 p_clock <-  circles[grep(":",circles$clock),]
 #color is based on displastic tissue age
 
 color_val <- myPal(200)[findInterval( p_clock$age, seq( 15,35, length.out= 200), rightmost.closed= T ) ]
 
-#convert the pclock to numerals
+#convert the pclock clock values to numerals
 check_1 <- factor(p_clock$clock)
 levels(check_1) <- c(4,1,2,3)
 fixedcoord = as.numeric(levels(check_1))[check_1]
