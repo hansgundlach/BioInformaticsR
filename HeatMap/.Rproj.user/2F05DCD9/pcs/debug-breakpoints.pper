@@ -1,6 +1,51 @@
 {
     "debugBreakpointsState" : {
         "breakpoints" : [
+            {
+                "editor_line_number" : 123,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 6,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 123,
+                "needs_updated_steps" : true,
+                "package_name" : "",
+                "path" : "~/GitHub/BioInformaticsR/HeatMap/heating.R",
+                "state" : 1,
+                "type" : 1
+            },
+            {
+                "editor_line_number" : 139,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 9,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 139,
+                "needs_updated_steps" : true,
+                "package_name" : "",
+                "path" : "~/GitHub/BioInformaticsR/HeatMap/heating.R",
+                "state" : 1,
+                "type" : 1
+            },
+            {
+                "editor_line_number" : 127,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 10,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 127,
+                "needs_updated_steps" : true,
+                "package_name" : "",
+                "path" : "~/GitHub/BioInformaticsR/HeatMap/heating.R",
+                "state" : 1,
+                "type" : 1
+            }
         ]
     }
 }
