@@ -142,16 +142,6 @@ p_clock <-  circles[grep(":",circles$clock),]
 #color is based on displastic tissue age
 color_val <- myPal(200)[findInterval( p_clock$age, seq( 15,35, length.out= 200), rightmost.closed= T ) ]
 
-
-#convert <- function(set){
-  #check_1 <- factor(set)
-  #print check_1
-  #levels(set) <- c(4,1,2,3)
-  #fixedcoord = as.numeric(levels(set))[set] 
-  #fixedcoord
- # }
-
-convert(p_clock$clock)
 #convert the pclock clock values to numerals
 check_1 <- factor(p_clock$clock)
 levels(check_1) <- c(4,1,2,3)
