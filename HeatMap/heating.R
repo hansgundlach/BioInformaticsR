@@ -126,7 +126,7 @@ dev.new()
 f1<- predict( best_fit, xg)
 out.p<- as.surface( xg, f1)
 myPal <- colorRampPalette(c("darkblue", "blue", "cyan", "green", "yellow", "orange", "darkorange", "red","darkred"))
-best_plot = plot.surface(out.p,zlim=c(15,35),xlab='clock position',ylab='length in (cm) from GEJ',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = .75, xaxt = 'n',col = myPal(200))
+best_plot = plot.surface(out.p,zlim=c(15,35),xlab='clock position',ylab='length in (cm) from GEJ',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = 1.5, xaxt = 'n',col = myPal(200))
 axis(side=1,at = c(1,2,3,4),labels = c("3:00","6:00","9:00","12:00"))
 
 #the code below deals with plotting points on the graph
@@ -135,7 +135,7 @@ axis(side=1,at = c(1,2,3,4),labels = c("3:00","6:00","9:00","12:00"))
 #plot the nondisplastic without clock
 points(runif(length(y_coord_no),0,4),y_coord_no-1, pch = "X", col = "white")
 #plot the nondisplastic points with clock values
-points(x_coord,y_coord-1, pch = "X")
+points((x_coord+runif(length(x_coord),-1,1))%%4,y_coord-1, pch = "X")
 
 #p_lock contains  all the displastic tissue with clock values
 p_clock <-  circles[grep(":",circles$clock),]
@@ -147,5 +147,6 @@ check_1 <- factor(p_clock$clock)
 levels(check_1) <- c(4,1,2,3)
 fixedcoord = as.numeric(levels(check_1))[check_1]
 #plot the displastic points with clock values
-points(fixedcoord, p_clock$dif,pch=20,col = color_val ,cex = 3)
-points(fixedcoord, p_clock$dif,pch=1,cex= 2,lwd = 2)
+jitter = runif(length(p_clock$dif),-.25,.25)
+points((fixedcoord+jitter)%%4, p_clock$dif,pch=20,col = color_val ,cex = 3)
+points((fixedcoord+jitter)%%4, p_clock$dif,pch=1,cex= 2,lwd = 2)
