@@ -19,7 +19,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.pdf  
-*.PDF	
+*.PDF
+*.Rproj
+*.RData	
+
 
 
 # =========================
