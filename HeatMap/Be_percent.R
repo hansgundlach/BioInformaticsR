@@ -1,12 +1,15 @@
 library(ggplot2)
 
+
+#change this to accomedate new data 
+
 #split by user id
 splitted <- split(mset,mset$length_dif)
 #graph percent displastic 
 changed <- lapply(splitted, FUN = function(x) length(na.omit(x$HGD.LGD))/ length(x$HGD.LGD))
 changed <- as.numeric(changed)
-xdirect = qplot(y = changed,x = seq(length(changed))) + labs(title="Plot of Displastic Percentage") +
-labs(x="level", y="% yaaaaaaof BE Displastic") + stat_smooth() + geom_point() + geom_bar(stat = "identity") + ylim(0,1)
-#xdirect + coord_flip()
+xdirect = qplot(y = changed,x = seq(from = 0,to = length(changed)-1)) + labs(title="Plot of Displastic Percentage") +
+labs(x="level", y="% of BE Displastic") + stat_smooth(se = FALSE) + geom_point() + geom_bar(stat = "identity") + ylim(0,1)
+xdirect + coord_flip()
 
 

@@ -1,4 +1,6 @@
-mset <- read.csv("~/msetHans16.csv", na.strings= c("",NA))
+mset <- read.csv("~/msetHans22.csv", na.strings= c("",NA))
+UpdatedData <- read.csv("~/UpdatedData.csv",na.strings = c("",NA))
+
 library("RColorBrewer")
 library(plotly)
 library(stringr)
@@ -25,13 +27,18 @@ dif <- GEJ - dist
 clock <- c(unlist(clock))
 #replace 5:00 with 6:00 and organizes data into data frame
 clock <- gsub("5:00", "6:00",clock)
-dif <- c(dif)
+clock <- c(clock, rep_len("",length(UpdatedData$loc)))
+dif <- c(dif,rounf(UpdatedData$loc)) #c(dif)  
 onset <- mset$tissue_age
 age <- mset$Age
-dwell <- age -onset
+dwell <- age - onset
+dwell <- c(dwell, UpdatedData$tissue_age)
 
 df <- data.frame(clock,dif,dwell)
 names(df) <- c("clock","dif","age")
+
+
+mset$length_dif <- df$dif
 
 #bifuricate the data into two groups displastic and non displastic 
 circles <- df[grep("yes",mset$HGD.LGD),]
