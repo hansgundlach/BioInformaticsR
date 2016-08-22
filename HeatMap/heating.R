@@ -1,6 +1,5 @@
 mset <- read.csv("~/msetHans22.csv", na.strings= c("",NA))
-UpdatedData <- read.csv("~/UpdatedData.csv",na.strings = c("",NA))
-
+UpdatedData <- read.csv("~/30data.csv",na.strings = c("",NA))
 library("RColorBrewer")
 library(plotly)
 library(stringr)
@@ -24,21 +23,23 @@ dist <- c(as.numeric(lapply(dist, FUN = function(x) gsub("[^0-9]","",x))))
 dif <- GEJ - dist
 
 
+
 clock <- c(unlist(clock))
 #replace 5:00 with 6:00 and organizes data into data frame
 clock <- gsub("5:00", "6:00",clock)
+#fills so that all colums in data frame are the same size
 clock <- c(clock, rep_len("",length(UpdatedData$loc)))
-dif <- c(dif,rounf(UpdatedData$loc)) #c(dif)  
+dif_co <- c(dif,round(UpdatedData$loc)) #c(dif)  
 onset <- mset$tissue_age
 age <- mset$Age
 dwell <- age - onset
 dwell <- c(dwell, UpdatedData$tissue_age)
 
-df <- data.frame(clock,dif,dwell)
+df <- data.frame(clock,dif_co,dwell)
 names(df) <- c("clock","dif","age")
 
 
-mset$length_dif <- df$dif
+#mset$length_dif[0:length()] <- df$dif[0:length()]
 
 #bifuricate the data into two groups displastic and non displastic 
 circles <- df[grep("yes",mset$HGD.LGD),]
@@ -66,7 +67,7 @@ weight = matrix(rep(0,len=80), nrow=20,ncol=4)
 y_coord  = y_coord + 1
 
 #adds position and heat data to esoph diagram 
-for(vale in 1:length(x_coord)){
+for(vale in 1:length(y_coord)){
   
   #print(mether[vale])
   esoph[y_coord[vale],x_coord[vale]] = esoph[y_coord[vale],x_coord[vale]]+ mether[vale]
@@ -115,14 +116,14 @@ PBCpos[,2] = PBCpos[,2] - 1
 
 
 
-z_index = as.vector(best_matrix)
-z_index = which(!is.na(z_index), TRUE)
-z_index <- pre_val[z_index]
-rorm_mat = matrix(z_index,ncol = 1)
+z_val = as.vector(best_matrix)
+z_index = which(!is.nan(z_val), TRUE)
+z_val<- z_val[z_index]
+rorm_mat = matrix(z_val,ncol = 1)
 PBCz = rbind(rorm_mat,rorm_mat,rorm_mat)
 
 
-best_fit <- Tps(PBCpos,PBCz,cost= 1.2)
+best_fit <- Tps(PBCpos,PBCz,cost= 1)
 
 grid.list<- list( x= seq(0,4,.1), y=seq(0,12,.1))   #Note - these ranges will need to be changed for your needs
 xg<- make.surface.grid(grid.list)
@@ -163,7 +164,7 @@ points((fixedcoord+jitter)%%4, p_clock$dif,pch=1,cex= 2,lwd = 2)
 no_clock <-  circles[-c(grep(":",circles$clock)),]
 no_color_val <- myPal(200)[findInterval( no_clock$age, seq( 15,35, length.out= 200), rightmost.closed= T ) ]
 clock_jit = runif(length(no_clock),0,4)
-points(clock_jit, no_clock$dif,pch=20,col = no_color_val ,cex = 3)
+points(clock_jit, no_clock$dif,pch=20,col = no_color_val,cex = 3)
 points(clock_jit, no_clock$dif,pch=1,cex= 2,lwd = 2)
 
 

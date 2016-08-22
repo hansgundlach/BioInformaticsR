@@ -1,9 +1,7 @@
 library(ggplot2)
-
-
-#change this to accomedate new data 
-
-#split by user id
+#modifed set
+mset$length_dif <- dif
+#split by length after junction
 splitted <- split(mset,mset$length_dif)
 #graph percent displastic 
 changed <- lapply(splitted, FUN = function(x) length(na.omit(x$HGD.LGD))/ length(x$HGD.LGD))
