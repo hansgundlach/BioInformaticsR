@@ -11,3 +11,9 @@ labs(x="level", y="% of BE Displastic") + stat_smooth(se = FALSE) + geom_point()
 xdirect + coord_flip()
 
 
+
+
+#plot of correlation for new 30 data points
+plot(UpdatedData$loc, UpdatedData$tissue_age,main="Correlation Between BE Location and Age", xlab="BE Location cm", ylab="Tissue-Age Years",pch = 19)
+cor.test(UpdatedData$loc, UpdatedData$tissue_age)
+abline(lm(UpdatedData$tissue_age ~ UpdatedData$loc))

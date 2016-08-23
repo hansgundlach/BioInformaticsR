@@ -28,7 +28,7 @@ clock <- c(unlist(clock))
 #replace 5:00 with 6:00 and organizes data into data frame
 clock <- gsub("5:00", "6:00",clock)
 #fills so that all colums in data frame are the same size
-clock <- c(clock, rep_len("",length(UpdatedData$loc)))
+clock <-  c(clock, rep_len("",length(UpdatedData$loc)))
 dif_co <- c(dif,round(UpdatedData$loc)) #c(dif)  
 onset <- mset$tissue_age
 age <- mset$Age
@@ -98,7 +98,7 @@ for(index in 1:length(y_coord_no)){
 best_matrix <- esoph*weight^-1
 best_matrix
 #makes 2D discrete heatmap
-plot_ly(z=best_matrix,x= c("3:00","6:00","9:00","12:00"), type="heatmap")
+plot_ly(z=best_matrix,x= c("3:00","6:00","9:00","12:00"), type="heatmap",zmin = 15 ,zmax = 35 )
 
 
 #Part 2 -- smooth graph of data
@@ -111,6 +111,7 @@ left[,2] = left[,2]-4
 right <-  pos
 right[,2] = right[,2] +4
 PBCpos = rbind(pos,right,left)
+#switch columns 
 PBCpos = PBCpos[,c(2,1)]
 PBCpos[,2] = PBCpos[,2] - 1
 
@@ -134,21 +135,15 @@ dev.new()
 f1<- predict( best_fit, xg)
 out.p<- as.surface( xg, f1)
 myPal <- colorRampPalette(c("darkblue", "blue", "cyan", "green", "yellow", "orange", "darkorange", "red","darkred"))
-best_plot = plot.surface(out.p,zlim=c(15,35),xlab='clock position',ylab='length in (cm) from GEJ',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = 1.5, xaxt = 'n',col = myPal(200))
+best_plot = plot.surface(out.p,zlim=c(15,35),xlab='clock position',ylab='length in (cm) from GEJ',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = 1.5, xaxt = 'n',col = myPal(400))
 axis(side=1,at = c(1,2,3,4),labels = c("3:00","6:00","9:00","12:00"),cex.lab = 2)
 
 #the code below deals with plotting points on the graph
 
-
-#plot the nondisplastic without clock
-points(runif(length(y_coord_no),0,4),y_coord_no-1, pch = "X", col = "white")
-#plot the nondisplastic points with clock values
-points((x_coord+runif(length(x_coord),-.5,.5))%%4,y_coord-1, pch = "X")
-
 #p_lock contains  all the displastic tissue with clock values
 p_clock <-  circles[grep(":",circles$clock),]
 #color is based on displastic tissue age
-color_val <- myPal(200)[findInterval( p_clock$age, seq( 15,35, length.out= 200), rightmost.closed= T ) ]
+color_val <- myPal(400)[findInterval( p_clock$age, seq( 15,35, length.out= 400), rightmost.closed= T ) ]
 
 #convert the pclock clock values to numerals
 check_1 <- factor(p_clock$clock)
@@ -162,10 +157,19 @@ points((fixedcoord+jitter)%%4, p_clock$dif,pch=1,cex= 2,lwd = 2)
 #plot the displastic points without clock values
 
 no_clock <-  circles[-c(grep(":",circles$clock)),]
-no_color_val <- myPal(200)[findInterval( no_clock$age, seq( 15,35, length.out= 200), rightmost.closed= T ) ]
+no_color_val <- myPal(400)[findInterval( no_clock$age, seq( 15,35, length.out= 400), rightmost.closed= T ) ]
 clock_jit = runif(length(no_clock),0,4)
 points(clock_jit, no_clock$dif,pch=20,col = no_color_val,cex = 3)
 points(clock_jit, no_clock$dif,pch=1,cex= 2,lwd = 2)
+
+
+#plot the nondisplastic without clock
+points(runif(length(y_coord_no),0,4),y_coord_no-1, pch = "X", col = "white")
+#plot the nondisplastic points with clock values
+points((x_coord+runif(length(x_coord),-.5,.5))%%4,y_coord-1, pch = "X")
+
+
+
 
 
 
