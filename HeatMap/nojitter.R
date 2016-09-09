@@ -172,7 +172,7 @@ fixedcoord = as.numeric(levels(check_1))[check_1]
 
 
 #plot the displastic points with clock values
-jitter = runif(length(p_clock$dif),-.5,.5)
+jitter = 0 #runif(length(p_clock$dif),-.5,.5)
 points((fixedcoord+jitter)%%4, p_clock$dif,pch=20,col = color_val ,cex = 3)
 points((fixedcoord+jitter)%%4, p_clock$dif,pch=1,cex= 2,lwd = 2)
 
@@ -186,10 +186,8 @@ clock_jit = runif(length(no_clock),0,4)
 points(clock_jit, no_clock$dif,pch=20,col = no_color_val,cex = 3)
 points(clock_jit, no_clock$dif,pch=1,cex= 2,lwd = 2)
 
-
 #plot the nondisplastic without clock
 #triangle  points
-
 randomx = runif(length(y_coord_no),0,4)
 intervals = findInterval(noclockdf$age, seq( 0,40, length.out= 400), rightmost.closed= T )
 intervals = replace(intervals, intervals == 0 ,1)
@@ -198,18 +196,16 @@ points(randomx,y_coord_no-1, pch = 17, col = oldwhiteX,cex = 1.5)
 points(randomx,y_coord_no-1, pch = 2,lwd = 1,cex = 1.4)
 
 #plot the nondisplastic points with clock values
-#square points
+#triangles
 interval2 = findInterval(df[clock_rows, ]$age, seq(0,40, length.out= 400), rightmost.closed= T )
 interval2 = replace(interval2,interval2 == 0,1)
 loc_nodis  <- myPal(400)[interval2]
-jitteredX =(x_coord+runif(length(x_coord),-.5,.5))%%4 
-points(jitteredX,y_coord-1, pch = 15, col= loc_nodis,cex = 1.5)
-points(jitteredX,y_coord-1, pch = 0,cex = 1.4)
+jitteredX =  x_coord #(x_coord+runif(length(x_coord),-.5,.5))%%4 
+points(jitteredX,y_coord-1, pch = 17, col= loc_nodis,cex = 1.5)
+points(jitteredX,y_coord-1, pch = 2,cex = 1.4)
 
 
 
-#how to deal with outlier points
-#a zero index means below 15 
 
 
 
