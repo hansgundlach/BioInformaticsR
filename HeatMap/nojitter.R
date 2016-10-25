@@ -38,6 +38,16 @@ age <- mset$Age
 dwell <- age - onset
 dwell <- c(dwell, UpdatedData$tissue_age)
 
+
+
+#adding cardia data
+cardiadiff <- c(-1,-1,-1,-1)
+cardiadwell <- c(1,2,3,4)
+clock <- c(clock, rep_len("",length(cardiadwell)))
+dif_co <- c(dif_co, cardiadiff)
+dwell <- c(dwell,cardiadwell)
+
+
 #alternate configuration 
 #clock <- rep_len("",length(UpdatedData$loc))
 #dif_co <- round(UpdatedData$loc)
@@ -79,7 +89,7 @@ weight = matrix(rep(0,len=80), nrow=20,ncol=4)
 
 #I don't think this is correctly filling 
 #this shifts up the y values
-y_coord  = y_coord + 1
+y_coord  = y_coord + 2
 
 #adds position and heat data to esoph diagram 
 for(vale in 1:length(y_coord)){
@@ -98,7 +108,7 @@ heatmap(weight)
 noclockdf <- df[-c(grep(":", df$clock)), ]
 
 y_coord_no = as.numeric(noclockdf$dif)
-y_coord_no = y_coord_no +1
+y_coord_no = y_coord_no +2
 meth_value = as.numeric(noclockdf$age)
 
 
@@ -123,6 +133,12 @@ plot_ly(z=best_matrix,x= c("3:00","6:00","9:00","12:00"), type="heatmap",zmin = 
 
 #making copies of position to make peridoic boundary conditions
 pos = which(!is.na(best_matrix),TRUE)
+
+
+
+
+
+
 left  <-  pos
 left[,2] = left[,2]-4 
 right <-  pos
@@ -130,8 +146,7 @@ right[,2] = right[,2] +4
 PBCpos = rbind(pos,right,left)
 #switch columns 
 PBCpos = PBCpos[,c(2,1)]
-PBCpos[,2] = PBCpos[,2] - 1
-
+PBCpos[,2] = PBCpos[,2] - 2
 
 
 z_val = as.vector(best_matrix)
@@ -143,7 +158,7 @@ PBCz = rbind(rorm_mat,rorm_mat,rorm_mat)
 
 best_fit <- Tps(PBCpos,PBCz,cost= 1.1)
 
-grid.list<- list( x= seq(0,4,.1), y=seq(0,12,.1))   #Note - these ranges will need to be changed for your needs
+grid.list<- list( x= seq(0,4,.1), y=seq(-2,12,.1))   #Note - these ranges will need to be changed for your needs
 xg<- make.surface.grid(grid.list)
 
 #plotting function - modify as needed, including changing zlim to cover the range of y-values 
@@ -152,8 +167,10 @@ dev.new()
 f1<- predict( best_fit, xg)
 out.p<- as.surface( xg, f1)
 myPal <- colorRampPalette(c("darkblue", "blue", "cyan", "green", "yellow", "orange", "darkorange", "red","darkred"))
-best_plot = plot.surface(out.p,zlim=c(0,40),xlab='clock position',ylab='distance from GEJ (cm)',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = 1.5, xaxt = 'n',col = myPal(400))
+best_plot = plot.surface(out.p,zlim=c(0,40),ylim = c(-1,12),xlab='clock position',ylab='distance from GEJ (cm)',main='Esophagus',cex.main=1.3,cex.lab=1.3,cex.axis = 1.5, xaxt = 'n',col = myPal(400))
 axis(side=1,at = c(1,2,3,4),labels = c("3:00","6:00","9:00","12:00"),cex.lab = 2)
+axis(side=2,at = c(-1),labels = c("Cardia"),las=1)
+
 
 #the code below deals with plotting points on the graph
 
@@ -177,7 +194,6 @@ points((fixedcoord+jitter)%%4, p_clock$dif,pch=20,col = color_val ,cex = 3)
 points((fixedcoord+jitter)%%4, p_clock$dif,pch=1,cex= 2,lwd = 2)
 
 #plot the displastic points without clock values
-
 no_clock <-  circles[-c(grep(":",circles$clock)),]
 interval3 = findInterval( no_clock$age, seq( 0,40, length.out= 400), rightmost.closed= T )
 interval3 = replace(interval3, interval3 == 0 ,1)
@@ -192,8 +208,8 @@ randomx = runif(length(y_coord_no),0,4)
 intervals = findInterval(noclockdf$age, seq( 0,40, length.out= 400), rightmost.closed= T )
 intervals = replace(intervals, intervals == 0 ,1)
 oldwhiteX <- myPal(400)[intervals]
-points(randomx,y_coord_no-1, pch = 17, col = oldwhiteX,cex = 1.5)
-points(randomx,y_coord_no-1, pch = 2,lwd = 1,cex = 1.4)
+points(randomx,y_coord_no-2, pch = 17, col = oldwhiteX,cex = 1.5)
+points(randomx,y_coord_no-2, pch = 2,lwd = 1,cex = 1.4)
 
 #plot the nondisplastic points with clock values
 #triangles
@@ -201,8 +217,8 @@ interval2 = findInterval(df[clock_rows, ]$age, seq(0,40, length.out= 400), right
 interval2 = replace(interval2,interval2 == 0,1)
 loc_nodis  <- myPal(400)[interval2]
 jitteredX =  x_coord #(x_coord+runif(length(x_coord),-.5,.5))%%4 
-points(jitteredX,y_coord-1, pch = 17, col= loc_nodis,cex = 1.5)
-points(jitteredX,y_coord-1, pch = 2,cex = 1.4)
+points(jitteredX,y_coord-2, pch = 17, col= loc_nodis,cex = 1.5)
+points(jitteredX,y_coord-2, pch = 2,cex = 1.4)
 
 
 
